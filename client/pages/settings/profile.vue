@@ -1,11 +1,11 @@
 <template>
-  <card :title="$t('your_info')">
+  <card :title="$t('pages.settings.profile.your_info')">
     <form @submit.prevent="update" @keydown="form.onKeydown($event)">
       <alert-success :form="form" :message="$t('info_updated')"/>
 
       <!-- Name -->
       <div class="form-group row">
-        <label class="col-md-3 col-form-label text-md-right">{{ $t('name') }}</label>
+        <label class="col-md-3 col-form-label text-md-right">{{ $t('pages.settings.profile.name') }}</label>
         <div class="col-md-7">
           <input v-model="form.name" type="text" name="name" class="form-control"
             :class="{ 'is-invalid': form.errors.has('name') }">
@@ -15,7 +15,7 @@
 
       <!-- Email -->
       <div class="form-group row">
-        <label class="col-md-3 col-form-label text-md-right">{{ $t('email') }}</label>
+        <label class="col-md-3 col-form-label text-md-right">{{ $t('pages.settings.profile.email') }}</label>
         <div class="col-md-7">
           <input v-model="form.email" type="email" name="email" class="form-control"
             :class="{ 'is-invalid': form.errors.has('email') }">
@@ -26,7 +26,7 @@
       <!-- Submit Button -->
       <div class="form-group row">
         <div class="col-md-9 ml-md-auto">
-          <v-button type="success" :loading="form.busy">{{ $t('update') }}</v-button>
+          <v-button type="success" :loading="form.busy">{{ $t('pages.settings.profile.update') }}</v-button>
         </div>
       </div>
     </form>
@@ -41,7 +41,7 @@ export default {
   scrollToTop: false,
 
   head () {
-    return { title: this.$t('settings') }
+    return { title: this.$t('pages.settings.profile.title') }
   },
 
   data: () => ({

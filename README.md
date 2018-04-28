@@ -26,8 +26,9 @@
 - `composer create-project --prefer-dist cretueusebiu/laravel-nuxt`
 - Edit `.env` to set your database connection details and `APP_URL` (the url to your Laravel application)
 - (When installed via git clone or download, run `php artisan key:generate` and `php artisan jwt:secret`)
-- `php artisan migrate`
+- `php artisan migrate:refresh --seed`. Seeding is optional.
 - `yarn` / `npm install`
+You could login with user `admin@localhost` password `secret` if you used `--seed`.
 
 ## Usage
 

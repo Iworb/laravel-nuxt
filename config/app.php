@@ -83,9 +83,8 @@ return [
     'locale' => 'en',
 
     'locales' => [
-        'en' => 'EN',
-        'zh-CN' => '中文',
-        'es' => 'ES',
+        'en' => 'English',
+        'ru' => 'Русский'
     ],
 
     /*
@@ -184,6 +183,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Dimsav\Translatable\TranslatableServiceProvider::class,
 
     ],
 

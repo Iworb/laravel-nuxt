@@ -12,6 +12,8 @@ const polyfills = [
   'String.prototype.endsWith'
 ]
 
+process.env.API_URL = process.env.APP_URL
+
 module.exports = {
   // mode: 'spa',
 
@@ -20,13 +22,15 @@ module.exports = {
   env: {
     apiUrl: process.env.APP_URL || 'http://api.laravel-nuxt.test',
     appName: process.env.APP_NAME || 'Laravel-Nuxt',
-    appLocale: process.env.APP_LOCALE || 'en',
     githubAuth: !!process.env.GITHUB_CLIENT_ID
+  },
+  axios: {
+    browserBaseURL: process.env.APP_URL
   },
 
   head: {
     title: process.env.APP_NAME,
-    titleTemplate: '%s - ' + process.env.APP_NAME,
+    titleTemplate: process.env.APP_NAME + ' - %s',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -40,10 +44,18 @@ module.exports = {
     ]
   },
 
-  loading: { color: '#007bff' },
+  loading: { color: 'cyan' },
+
+  build: {
+    extractCss: {
+      allChunks: true
+    }
+  },
 
   router: {
-    middleware: ['locale', 'check-auth']
+    middleware: [
+      'check-auth'
+    ]
   },
 
   css: [
@@ -56,16 +68,31 @@ module.exports = {
     '~plugins/vform',
     '~plugins/axios',
     '~plugins/fontawesome',
-    // '~plugins/nuxt-client-init',
+    '~plugins/nuxt-client-init',
     { src: '~plugins/bootstrap', ssr: false }
   ],
 
   modules: [
-    '@nuxtjs/router',
-    '~/modules/spa'
-  ],
-
-  build: {
-    extractCSS: true
-  }
+    '~modules/spa',
+    '@nuxtjs/axios',
+    ['nuxt-i18n', {
+      locales: [
+        {
+          code: 'en',
+          iso: 'en',
+          name: 'English',
+          langFile: 'en.js'
+        },
+        {
+          code: 'ru',
+          iso: 'ru',
+          name: 'Русский',
+          langFile: 'ru.js'
+        }
+      ],
+      defaultLocale: 'en',
+      loadLanguagesAsync: true,
+      langDir: 'locales/'
+    }]
+  ]
 }

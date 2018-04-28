@@ -1,4 +1,3 @@
-import axios from 'axios'
 import Cookies from 'js-cookie'
 
 // state
@@ -33,23 +32,22 @@ export const mutations = {
     state.token = null
   },
 
-  UPDATE_USER (state, { user }) {
+  UPDATE_USER (state, {user}) {
     state.user = user
   }
 }
 
 // actions
 export const actions = {
-  saveToken ({ commit, dispatch }, { token, remember }) {
+  saveToken ({commit}, {token, remember}) {
     commit('SET_TOKEN', token)
-
-    Cookies.set('token', token, { expires: remember ? 365 : null })
+    this.$axios.setToken(token, 'Bearer')
+    Cookies.set('token', token, {expires: remember ? 365 : null})
   },
 
-  async fetchUser ({ commit }) {
+  async fetchUser ({commit}) {
     try {
-      const { data } = await axios.get('/user')
-
+      const data = await this.$axios.$get('user')
       commit('FETCH_USER_SUCCESS', data)
     } catch (e) {
       Cookies.remove('token')
@@ -58,23 +56,22 @@ export const actions = {
     }
   },
 
-  updateUser ({ commit }, payload) {
+  updateUser ({commit}, payload) {
     commit('UPDATE_USER', payload)
   },
 
-  async logout ({ commit }) {
+  async logout ({commit}, clientOnly) {
     try {
-      await axios.post('/logout')
+      if (!clientOnly) await this.$axios.post('/logout')
     } catch (e) { }
 
     Cookies.remove('token')
-
+    this.$axios.setToken(false)
     commit('LOGOUT')
   },
 
-  async fetchOauthUrl (ctx, { provider }) {
-    const { data } = await axios.post(`/oauth/${provider}`)
-
+  async fetchOauthUrl (ctx, {provider}) {
+    const data = await this.$axios.$post(`/oauth/${provider}`)
     return data.url
   }
 }

@@ -1,11 +1,21 @@
 <template>
-  <card :title="$t('your_password')">
+  <card :title="$t('pages.settings.password.password_info')">
     <form @submit.prevent="update" @keydown="form.onKeydown($event)">
       <alert-success :form="form" :message="$t('password_updated')"/>
 
+      <!-- Old password -->
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label text-md-right">{{ $t('pages.settings.password.old_password') }}</label>
+        <div class="col-md-7">
+          <input v-model="form.oldPassword" type="password" name="oldPassword" class="form-control"
+                 :class="{ 'is-invalid': form.errors.has('oldPassword') }">
+          <has-error :form="form" field="oldPassword"/>
+        </div>
+      </div>
+
       <!-- Password -->
       <div class="form-group row">
-        <label class="col-md-3 col-form-label text-md-right">{{ $t('new_password') }}</label>
+        <label class="col-md-3 col-form-label text-md-right">{{ $t('pages.settings.password.password') }}</label>
         <div class="col-md-7">
           <input v-model="form.password" type="password" name="password" class="form-control"
             :class="{ 'is-invalid': form.errors.has('password') }">
@@ -15,7 +25,7 @@
 
       <!-- Password Confirmation -->
       <div class="form-group row">
-        <label class="col-md-3 col-form-label text-md-right">{{ $t('confirm_password') }}</label>
+        <label class="col-md-3 col-form-label text-md-right">{{ $t('pages.settings.password.password_confirmation') }}</label>
         <div class="col-md-7">
           <input v-model="form.password_confirmation" type="password" name="password_confirmation" class="form-control"
             :class="{ 'is-invalid': form.errors.has('password_confirmation') }">
@@ -26,7 +36,7 @@
       <!-- Submit Button -->
       <div class="form-group row">
         <div class="col-md-9 ml-md-auto">
-          <v-button type="success" :loading="form.busy">{{ $t('update') }}</v-button>
+          <v-button type="success" :loading="form.busy">{{ $t('pages.settings.password.update') }}</v-button>
         </div>
       </div>
     </form>
@@ -40,11 +50,12 @@ export default {
   scrollToTop: false,
 
   head () {
-    return { title: this.$t('settings') }
+    return { title: this.$t('pages.settings.password.title') }
   },
 
   data: () => ({
     form: new Form({
+      oldPassword: '',
       password: '',
       password_confirmation: ''
     })

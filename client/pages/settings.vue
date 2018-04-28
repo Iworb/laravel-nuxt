@@ -1,10 +1,10 @@
 <template>
   <div class="row">
     <div class="col-md-3">
-      <card :title="$t('settings')" class="settings-card">
+      <card :title="$t('pages.settings.title')" class="settings-card">
         <ul class="nav flex-column nav-pills">
           <li v-for="tab in tabs" class="nav-item">
-            <router-link :to="{ name: tab.route }" class="nav-link" active-class="active">
+            <router-link :to="localePath(tab.route)" class="nav-link" active-class="active">
               <fa :icon="tab.icon" fixed-width/>
               {{ tab.name }}
             </router-link>
@@ -15,7 +15,7 @@
 
     <div class="col-md-9">
       <transition name="fade" mode="out-in">
-        <router-view/>
+        <nuxt-child/>
       </transition>
     </div>
   </div>
@@ -24,19 +24,18 @@
 <script>
 export default {
   middleware: 'auth',
-
   computed: {
     tabs () {
       return [
         {
           icon: 'user',
-          name: this.$t('profile'),
-          route: 'settings.profile'
+          name: this.$t('pages.settings.profile.title'),
+          route: 'settings-profile'
         },
         {
           icon: 'lock',
-          name: this.$t('password'),
-          route: 'settings.password'
+          name: this.$t('pages.settings.password.title'),
+          route: 'settings-password'
         }
       ]
     }

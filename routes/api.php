@@ -34,3 +34,5 @@ Route::group(['middleware' => 'guest:api'], function () {
     Route::post('oauth/{provider}', 'Auth\OAuthController@redirectToProvider');
     Route::get('oauth/{provider}/callback', 'Auth\OAuthController@handleProviderCallback')->name('oauth.callback');
 });
+
+Route::resource('articles', 'ArticleController');

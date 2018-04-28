@@ -1,36 +1,14 @@
-import axios from 'axios'
 import swal from 'sweetalert2'
+import Form from 'vform'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
-export default ({ app, store, redirect }) => {
-  axios.defaults.baseURL = process.env.apiUrl
-
+export default ({app, $axios, store, redirect}) => {
   if (process.server) {
     return
   }
-
-  // Request interceptor
-  axios.interceptors.request.use(request => {
-    request.baseURL = process.env.apiUrl
-
-    const token = store.getters['auth/token']
-
-    if (token) {
-      request.headers.common['Authorization'] = `Bearer ${token}`
-    }
-
-    const locale = store.getters['lang/locale']
-    if (locale) {
-      request.headers.common['Accept-Language'] = locale
-    }
-
-    return request
-  })
-
-  // Response interceptor
-  axios.interceptors.response.use(response => response, error => {
-    const { status } = error.response || {}
+  $axios.onError(async error => {
+    const {status} = error.response || {}
 
     if (status >= 500) {
       swal({
@@ -44,20 +22,36 @@ export default ({ app, store, redirect }) => {
     }
 
     if (status === 401 && store.getters['auth/check']) {
-      swal({
+      await swal({
         type: 'warning',
         title: app.i18n.t('token_expired_alert_title'),
         text: app.i18n.t('token_expired_alert_text'),
         reverseButtons: true,
         confirmButtonText: app.i18n.t('ok'),
         cancelButtonText: app.i18n.t('cancel')
-      }).then(async () => {
-        await store.dispatch('auth/logout')
-
-        redirect({ name: 'login' })
       })
+      await store.dispatch('auth/logout', true)
+      redirect({name: 'login'})
     }
-
-    return Promise.reject(error)
+    throw error
   })
+  // TODO temporary vform solution for @nuxtjs/axios
+  Form.prototype.submit = async function (method, url, config = {}) {
+    this.startProcessing()
+
+    const data = method === 'get'
+      ? {params: this.data()}
+      : this.data()
+    try {
+      const response = await $axios[method](this.route(url), data, ...config)
+      this.finishProcessing()
+      return response
+    } catch (error) {
+      this.busy = false
+      if (error.response) {
+        this.errors.set(this.extractErrors(error.response))
+      }
+      throw error
+    }
+  }
 }

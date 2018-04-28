@@ -12,7 +12,7 @@ module.exports = function () {
   const publicDir = path.resolve('./public' + this.options.build.publicPath)
 
   this.nuxt.hook('generate:done', async () => {
-    const { html } = await this.nuxt.renderer.renderRoute('/', { url: '/' })
+    const {html} = await this.nuxt.renderer.renderRoute('/', {url: '/'})
 
     fs.removeSync(publicDir)
 

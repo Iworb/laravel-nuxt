@@ -1,3 +1,3 @@
 export default (ctx) => {
-  ctx.store.dispatch('nuxtClientInit', ctx)
+  if (process.client) ctx.store.dispatch('nuxtClientInit', ctx)
 }
